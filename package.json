@@ -1,0 +1,52 @@
+{
+  "name": "@flexio-oss/astrolabe-calendar",
+  "version": "0.0.0-dev",
+  "main": "index.js",
+  "repository": "git@github.com:flexiooss/astrolabe-calendar.git",
+  "author": "Antoine Bachetti (https://github.com/Basheitan)",
+  "dependencies": {
+    "@flexio-oss/assert": "0.0.0",
+    "@flexio-oss/js-helpers": "0.0.0",
+    "@flexio-oss/js-logger": "0.1.0-dev",
+    "@flexio-oss/global-import-registry": "0.0.0",
+    "@flexio-oss/astrolabe": "0.0.0-dev",
+    "@flexio-oss/hotballoon": "0.1.0-dev",
+    "@flexio-oss/js-generator-helpers": "0.0.0",
+    "@flexio-oss/extended-flex-types": "0.2.0"
+  },
+  "devDependencies": {
+    "code-altimeter-js": "https://github.com/flexiooss/code-altimeter-js.git",
+    "eslint": "^5.13.0",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-friendly-formatter": "^3.0.0",
+    "eslint-plugin-html": "^4.0.1",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1"
+  },
+  "hotballoon-shed": {
+    "build": {
+      "builder": "webpack4",
+      "entries": [
+        "src/bootstrap.js"
+      ],
+      "html_template": "src/index.html",
+      "output": "./dist"
+    },
+    "test": {
+      "tester": "code-altimeter-js",
+      "path": "./src/tests"
+    },
+    "dev": {
+      "server": {
+        "host": "ui.flexio.io"
+      }
+    },
+    "generate-sources": {
+      "value-objects": {
+        "extension": ".spec"
+      }
+    }
+  }
+}
