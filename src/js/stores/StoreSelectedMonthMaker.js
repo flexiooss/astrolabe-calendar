@@ -3,22 +3,27 @@ import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {assertType} from '@flexio-oss/assert'
 import {StoreBuilder} from '@flexio-oss/hotballoon/src/js/Store/StoreBuilder'
 
-export class StoreSelectedMonthUtils {
-  constructor() {
-    this.__store = null
-    this.__storePublic = null
+export class StoreSelectedMonthMaker {
+  /**
+   * @private
+   * @param {Store<StoreSelectedMonth>} store
+   * @param {PublicStoreHandler<StoreSelectedMonth>} storePublic
+   */
+  constructor(store, storePublic) {
+    this.__store = store
+    this.__storePublic = storePublic
   }
 
   /**
    *
    * @params {ComponentContext} componentContext
-   * @returns {StoreSelectedMonthUtils}
+   * @returns {StoreSelectedMonthMaker}
    */
-  build(componentContext) {
+  static create(componentContext) {
     assertType(TypeCheck.isComponentContext(componentContext),
-      'StoreSelectedMonthUtils:constructor: `componentContext` should be a ComponentContext'
+      'StoreSelectedMonthMaker:constructor: `componentContext` should be a ComponentContext'
     )
-    this.__store = componentContext.addStore(StoreBuilder.InMemory(
+    let store = componentContext.addStore(StoreBuilder.InMemory(
       new InMemoryStoreParams(
         new StoreTypeParam(
           globalFlexioImport.io.flexio.astrolabe_calendar.stores.StoreSelectedMonth,
@@ -48,8 +53,8 @@ export class StoreSelectedMonthUtils {
         new globalFlexioImport.io.flexio.astrolabe_calendar.stores.StoreSelectedMonthBuilder().build()
       )
     ))
-    this.__storePublic = new PublicStoreHandler(this.__store)
-    return this
+    let storePublic = new PublicStoreHandler(store)
+    return new StoreSelectedMonthMaker(store, storePublic)
   }
 
   /**

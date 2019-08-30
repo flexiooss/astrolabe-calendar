@@ -39,6 +39,9 @@
       "path": "./src/tests"
     },
     "dev": {
+      "entries": [
+        "src/bootstrap.js"
+      ],
       "server": {
         "host": "ui.flexio.io"
       }

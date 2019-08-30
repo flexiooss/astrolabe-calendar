@@ -1,16 +1,18 @@
 import '../../../import'
-import {TypeCheck} from '@flexio-oss/hotballoon'
+import {TypeCheck, ViewContainerParameters} from '@flexio-oss/hotballoon'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
-import {StoreDatePickedUtils} from '../stores/StoreDatePickedUtils/StoreDatePickedUtils'
+import {StoreDatePickedMaker} from '../stores/StoreDatePickedMaker'
 import {ComponentAstrolabeBuilder} from '@flexio-oss/astrolabe'
 import {DaysEnum} from '@flexio-oss/astrolabe/src/js/types/DaysEnum'
 import {assert} from '@flexio-oss/assert'
-import {ActionInitCalendarUtils} from '../actions/ActionInitCalendar/ActionInitCalendarUtils'
-import {StoreSelectedMonthUtils} from '../stores/StoreSelectedMonthUtils/StoreSelectedMonthUtils'
-import {ActionPreviousMonthUtils} from '../actions/ActionPreviousMonth/ActionPreviousMonthUtils'
-import {ActionNextMonthUtils} from '../actions/ActionNextMonth/ActionNextMonthUtils'
-import {ActionUpdatePickedDateUtils} from '../actions/ActionUpdatePickedDate/ActionUpdatePickedDateUtils'
-import {ViewContainerCalendarUtils} from '../view/container/ViewContainerCalendarUtils'
+import {ActionInitCalendarMaker} from '../actions/ActionInitCalendarMaker'
+import {StoreSelectedMonthMaker} from '../stores/StoreSelectedMonthMaker'
+import {ActionPreviousMonthMaker} from '../actions/ActionPreviousMonthMaker'
+import {ActionNextMonthMaker} from '../actions/ActionNextMonthMaker'
+import {ActionUpdatePickedDateMaker} from '../actions/ActionUpdatePickedDateMaker'
+import {ViewContainerCalendar} from '../view/ViewContainerCalendar'
+import {CalendarActionManager} from '../view/utils/CalendarActionManager'
+import {CalendarStoreManager} from '../view/utils/CalendarStoreManager'
 
 const InitCalendarBuilder = globalFlexioImport.io.flexio.astrolabe_calendar.actions.InitCalendarBuilder
 
@@ -25,13 +27,13 @@ export class ComponentCalendar {
     )
     this.__componentContext = componentContext
 
-    this.__actionInitCalendar = new ActionInitCalendarUtils().init(this.__componentContext.dispatcher())
-    this.__actionPrevisousMonth = new ActionPreviousMonthUtils().init(this.__componentContext.dispatcher())
-    this.__actionUpdatePickedDate = new ActionUpdatePickedDateUtils().init(this.__componentContext.dispatcher())
-    this.__actionNextMonth = new ActionNextMonthUtils().init(this.__componentContext.dispatcher())
+    this.__actionInitCalendar = ActionInitCalendarMaker.create(this.__componentContext.dispatcher())
+    this.__actionPrevisousMonth = ActionPreviousMonthMaker.create(this.__componentContext.dispatcher())
+    this.__actionUpdatePickedDate = ActionUpdatePickedDateMaker.create(this.__componentContext.dispatcher())
+    this.__actionNextMonth = ActionNextMonthMaker.create(this.__componentContext.dispatcher())
 
-    this.__storeDatePiked = new StoreDatePickedUtils().build(this.__componentContext)
-    this.__storeSelectedMonth = new StoreSelectedMonthUtils().build(this.__componentContext)
+    this.__storeDatePiked = StoreDatePickedMaker.create(this.__componentContext)
+    this.__storeSelectedMonth = StoreSelectedMonthMaker.create(this.__componentContext)
     this.__dateGenerator = ComponentAstrolabeBuilder.build(this.__componentContext.APP(), DaysEnum.MON)
 
     this.__actionInitCalendar.listen(this.__storeDatePiked.store(), this.__storeSelectedMonth.store(), this.__dateGenerator)
@@ -45,15 +47,18 @@ export class ComponentCalendar {
   }
 
   mountView(parentNode) {
-    new ViewContainerCalendarUtils(
-      this.__componentContext,
-      parentNode,
-      this.__storeDatePiked.storePublic(),
-      this.__storeSelectedMonth.storePublic(),
-      this.__actionNextMonth.action(),
-      this.__actionPrevisousMonth.action(),
-      this.__actionUpdatePickedDate.action(),
+    console.log(this.__storeSelectedMonth.storePublic())
+    this.__viewContainer = new ViewContainerCalendar(
+      new ViewContainerParameters(
+        this.__componentContext,
+        this.__componentContext.nextID(),
+        parentNode
+      ),
+      new CalendarStoreManager(this.__storeDatePiked.storePublic(), this.__storeSelectedMonth.storePublic()),
+      new CalendarActionManager(this.__actionNextMonth.action(), this.__actionPrevisousMonth.action(), this.__actionUpdatePickedDate.action()),
       this.__dateGenerator
-    ).init()
+    )
+    this.__componentContext.addViewContainer(this.__viewContainer)
+    this.__viewContainer.renderAndMount()
   }
 }

@@ -3,24 +3,25 @@ import {assertType, isNull} from '@flexio-oss/assert'
 import { ActionDispatcherBuilder, ActionDispatcherConfig, ActionTypeConfig, TypeCheck } from '@flexio-oss/hotballoon'
 import {DateExtended} from '@flexio-oss/extended-flex-types'
 
-export class ActionUpdatePickedDateUtils {
+export class ActionUpdatePickedDateMaker {
   /**
-   *
+   * @private
+   * @param {ActionDispatcher<UpdatePickedDate>} action
    */
-  constructor() {
-    this.__action = null
+  constructor(action) {
+    this.__action = action
   }
 
   /**
    *
    * @param {Dispatcher} dispatcher
-   * @returns {ActionUpdatePickedDateUtils}
+   * @returns {ActionUpdatePickedDateMaker}
    */
-  init(dispatcher) {
+  static create(dispatcher) {
     assertType(TypeCheck.isDispatcher(dispatcher),
-      'ActionUpdatePickedDateUtils:constructor: `dispatcher` should be a Dispatcher'
+      'ActionUpdatePickedDateMaker:constructor: `dispatcher` should be a Dispatcher'
     )
-    this.__action = ActionDispatcherBuilder.build(
+    let action = ActionDispatcherBuilder.build(
       new ActionDispatcherConfig(
         new ActionTypeConfig(
           globalFlexioImport.io.flexio.astrolabe_calendar.actions.UpdatePickedDate,
@@ -44,7 +45,7 @@ export class ActionUpdatePickedDateUtils {
         dispatcher
       )
     )
-    return this
+    return new ActionUpdatePickedDateMaker(action)
   }
 
   /**
@@ -52,14 +53,14 @@ export class ActionUpdatePickedDateUtils {
    * @param {Store<StoreDatePicked>} storeDatePicked
    * @param {Store<StoreSelectedMonth>} storeSelectedMonth
    * @param dateGenerator
-   * @returns {ActionUpdatePickedDateUtils}
+   * @returns {ActionUpdatePickedDateMaker}
    */
   listen(storeDatePicked, storeSelectedMonth, dateGenerator) {
     assertType(TypeCheck.isStore(storeDatePicked),
-      'ActionUpdatePickedDateUtils:constructor: `storeDatePicked` should be a Store'
+      'ActionUpdatePickedDateMaker:constructor: `storeDatePicked` should be a Store'
     )
     assertType(!isNull(this.__action),
-      'ActionUpdatePickedDateUtils:listen: action should be initialize before using it'
+      'ActionUpdatePickedDateMaker:listen: action should be initialize before using it'
     )
     this.__action.listenWithCallback(
       /**

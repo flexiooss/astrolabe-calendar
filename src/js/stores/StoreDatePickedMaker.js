@@ -3,21 +3,26 @@ import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {assertType} from '@flexio-oss/assert'
 import {StoreBuilder} from '@flexio-oss/hotballoon/src/js/Store/StoreBuilder'
 
-export class StoreDatePickedUtils {
-  constructor() {
-    this.__store = null
-    this.__storePublic = null
+export class StoreDatePickedMaker {
+  /**
+   * @private
+   * @param {Store<StoreDatePicked>} store
+   * @param {PublicStoreHandler<StoreDatePicked>} storePublic
+   */
+  constructor(store, storePublic) {
+    this.__store = store
+    this.__storePublic = storePublic
   }
 
   /**
    * @params {ComponentContext} componentContext
-   * @returns {StoreDatePickedUtils}
+   * @returns {StoreDatePickedMaker}
    */
-  build(componentContext) {
+  static create(componentContext) {
     assertType(TypeCheck.isComponentContext(componentContext),
-      'StoreDatePickedUtils:constructor: `componentContext` should be a ComponentContext'
+      'StoreDatePickedMaker:constructor: `componentContext` should be a ComponentContext'
     )
-    this.__store = componentContext.addStore(StoreBuilder.InMemory(
+    let store = componentContext.addStore(StoreBuilder.InMemory(
       new InMemoryStoreParams(
         new StoreTypeParam(
           globalFlexioImport.io.flexio.astrolabe_calendar.stores.StoreDatePicked,
@@ -47,8 +52,8 @@ export class StoreDatePickedUtils {
         new globalFlexioImport.io.flexio.astrolabe_calendar.stores.StoreDatePickedBuilder().build()
       )
     ))
-    this.__storePublic = new PublicStoreHandler(this.__store)
-    return this
+    let storePublic = new PublicStoreHandler(store)
+    return new StoreDatePickedMaker(store, storePublic)
   }
 
   /**

@@ -2,34 +2,31 @@ import {RECONCILIATION_RULES, e, View, ElementEventListenerBuilder} from '@flexi
 import {EventRegister, NEXT_MONTH, PREVIOUS_MONTH, UPDATE_DATE_PICKED} from './EventRegister'
 import {DayList} from '@flexio-oss/astrolabe/src/js/types/week/DayList'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
-import style from '../../../../assets/style.css'
-import {UpdatePickedDateBuilder} from '../../../../../generated/io/flexio/astrolabe_calendar/actions/UpdatePickedDate'
+import style from '../../../assets/style.css'
+import {UpdatePickedDateBuilder} from '../../../../generated/io/flexio/astrolabe_calendar/actions/UpdatePickedDate'
 import {DateExtended} from '@flexio-oss/extended-flex-types'
-
-const PreviousMonthBuilder = globalFlexioImport.io.flexio.astrolabe_calendar.actions.PreviousMonthBuilder
-const NextMonthBuilder = globalFlexioImport.io.flexio.astrolabe_calendar.actions.NextMonthBuilder
 
 export class ViewCalendar extends View {
   /**
    *
    * @param {ViewContainerBase} container
-   * @param {ContainerStore} stores
-   * @param {ContainerAction} actions
+   * @param {CalendarStoreManager} calendarStoreManager
+   * @param {CalendarActionManager} calendarActionManager
    * @param {ComponentAstrolabePublic} dateGenerator
    */
-  constructor(container, stores, actions, dateGenerator) {
+  constructor(container, calendarStoreManager, calendarActionManager, dateGenerator) {
     super(container)
-    this.__stores = stores
-    this.__actions = actions
+    this.__stores = calendarStoreManager
+    this.__actions = calendarActionManager
     this.__dateGenerator = dateGenerator
-    this.__selectedMonth = DateExtended.fromFlexDate(this.__stores.publicStoreSelectedMonth.state().data.month())
-    this.__flexDatePicked = this.__stores.publicStoreDatePicked.state().data.date()
-    this.subscribeToStore(this.__stores.publicStoreDatePicked, (e) => {
-      this.__flexDatePicked = this.__stores.publicStoreDatePicked.state().data.date()
+    this.__selectedMonth = DateExtended.fromFlexDate(this.__stores.publicStoreSelectedMonth().state().data.month())
+    this.__flexDatePicked = this.__stores.publicStoreDatePicked().state().data.date()
+    this.subscribeToStore(this.__stores.publicStoreDatePicked(), (e) => {
+      this.__flexDatePicked = this.__stores.publicStoreDatePicked().state().data.date()
       return true
     })
-    this.subscribeToStore(this.__stores.publicStoreSelectedMonth, (e) => {
-      this.__selectedMonth = DateExtended.fromFlexDate(this.__stores.publicStoreSelectedMonth.state().data.month())
+    this.subscribeToStore(this.__stores.publicStoreSelectedMonth(), (e) => {
+      this.__selectedMonth = DateExtended.fromFlexDate(this.__stores.publicStoreSelectedMonth().state().data.month())
       return true
     })
     this.__handleEvents()
@@ -52,19 +49,19 @@ export class ViewCalendar extends View {
   __handleEvents() {
     this.on()
       .nextMonth((payload) => {
-        this.__actions.actionNextMonth.dispatch(
-          new NextMonthBuilder().build()
+        this.__actions.actionNextMonth().dispatch(
+          new globalFlexioImport.io.flexio.astrolabe_calendar.actions.NextMonthBuilder().build()
         )
       })
     this.on()
       .previousMonth((payload) => {
-        this.__actions.actionPreviousMonth.dispatch(
-          new PreviousMonthBuilder().build()
+        this.__actions.actionPreviousMonth().dispatch(
+          new globalFlexioImport.io.flexio.astrolabe_calendar.actions.PreviousMonthBuilder().build()
         )
       })
     this.on()
       .updateDatePicked((payload) => {
-        this.__actions.actionUpdatePickedDate.dispatch(
+        this.__actions.actionUpdatePickedDate().dispatch(
           new UpdatePickedDateBuilder().date(payload.date).build()
         )
       })
@@ -200,7 +197,7 @@ export class ViewCalendar extends View {
       res.push(
         this.html(
           e('label#' + id + '-' + currentDay.getDate())
-            .text(currentDay.getDate())
+            .text(currentDay.getDate().toString())
             .className(style.calendarDay)
             .reconciliationRules(RECONCILIATION_RULES.BYPASS_LISTENERS)
             .bindClassName(style.calendarDayOutside, currentDay.getMonth() !== this.__selectedMonth.getMonth())
