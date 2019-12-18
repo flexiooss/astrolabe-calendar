@@ -19,7 +19,19 @@ export class ComponentCalendarPublic {
     this[__component] = component
   }
 
-  mountView(parentNode) {
-    this[__component].mountView(parentNode)
+  /**
+   *
+   * @param {FlexDate} date
+   */
+  setDate(date) {
+    return this[__component].setDate(date)
+  }
+
+  /**
+   *
+   * @returns {FlexDate}
+   */
+  getDate() {
+    return this[__component].getDate()
   }
 }

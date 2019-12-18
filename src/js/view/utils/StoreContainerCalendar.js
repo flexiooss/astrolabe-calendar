@@ -2,15 +2,15 @@ import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {assertType} from '@flexio-oss/assert'
 import {TypeCheck} from '@flexio-oss/hotballoon'
 
-export class CalendarStoreManager {
+export class StoreContainerCalendar {
   constructor(storeDatePicked, storeSelectedMonth) {
-    assertType(storeDatePicked.isTypeOf(globalFlexioImport.io.flexio.astrolabe_calendar.stores.StoreDatePicked),
-      'CalendarStoreManager:constructor: `storeDatePicked` should be a Store of StoreDatePicked'
+    assertType(storeDatePicked.isTypeOf(globalFlexioImport.io.flexio.astrolabe_calendar.stores.DatePicked),
+      'StoreContainerCalendar:constructor: `storeDatePicked` should be a Store of StoreDatePicked'
     )
     this.__storeDatePicked = TypeCheck.assertStoreBase(storeDatePicked)
 
-    assertType(storeSelectedMonth.isTypeOf(globalFlexioImport.io.flexio.astrolabe_calendar.stores.StoreSelectedMonth),
-      'CalendarStoreManager:constructor: `storeSelectedMonth` should be a Store of StoreSelectedMonth'
+    assertType(storeSelectedMonth.isTypeOf(globalFlexioImport.io.flexio.astrolabe_calendar.stores.SelectedMonth),
+      'StoreContainerCalendar:constructor: `storeSelectedMonth` should be a Store of StoreSelectedMonth'
     )
     this.__storeSelectedMonth = TypeCheck.assertStoreBase(storeSelectedMonth)
   }

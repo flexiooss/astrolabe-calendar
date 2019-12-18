@@ -1,71 +1,52 @@
-import {RECONCILIATION_RULES, e, View, ElementEventListenerBuilder} from '@flexio-oss/hotballoon'
-import {EventRegister, NEXT_MONTH, PREVIOUS_MONTH, UPDATE_DATE_PICKED} from './EventRegister'
+import {
+  RECONCILIATION_RULES,
+  e,
+  View,
+  ViewPublicEventHandler,
+  UIEventBuilder
+} from '@flexio-oss/hotballoon'
 import {DayList} from '@flexio-oss/astrolabe/src/js/types/week/DayList'
-import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import style from '../../../assets/style.css'
-import {UpdatePickedDateBuilder} from '../../../../generated/io/flexio/astrolabe_calendar/actions/UpdatePickedDate'
 import {DateExtended} from '@flexio-oss/extended-flex-types'
 
 export class ViewCalendar extends View {
   /**
    *
    * @param {ViewContainerBase} container
-   * @param {CalendarStoreManager} calendarStoreManager
-   * @param {CalendarActionManager} calendarActionManager
+   * @param {StoreContainerCalendar} calendarStoreManager
    * @param {ComponentAstrolabePublic} dateGenerator
+   * @param {DaysEnum} firstDay
+   * @param {ThemeStyle} styles
    */
-  constructor(container, calendarStoreManager, calendarActionManager, dateGenerator) {
+  constructor(container, calendarStoreManager, dateGenerator, firstDay, styles) {
     super(container)
     this.__stores = calendarStoreManager
-    this.__actions = calendarActionManager
     this.__dateGenerator = dateGenerator
-    this.__selectedMonth = DateExtended.fromFlexDate(this.__stores.publicStoreSelectedMonth().state().data.month())
-    this.__flexDatePicked = this.__stores.publicStoreDatePicked().state().data.date()
+    this.__firstDay = firstDay
+    this.__styles = styles
+
+    this.__selectedMonth = DateExtended.fromFlexDate(this.__stores.publicStoreSelectedMonth().data().month())
+    this.__flexDatePicked = this.__stores.publicStoreDatePicked().data().date()
     this.subscribeToStore(this.__stores.publicStoreDatePicked(), (e) => {
-      this.__flexDatePicked = this.__stores.publicStoreDatePicked().state().data.date()
+      this.__flexDatePicked = this.__stores.publicStoreDatePicked().data().date()
       return true
     })
     this.subscribeToStore(this.__stores.publicStoreSelectedMonth(), (e) => {
-      this.__selectedMonth = DateExtended.fromFlexDate(this.__stores.publicStoreSelectedMonth().state().data.month())
+      this.__selectedMonth = DateExtended.fromFlexDate(this.__stores.publicStoreSelectedMonth().data().month())
       return true
     })
-    this.__handleEvents()
   }
 
   /**
    * @Override
-   * @return {EventRegister}
+   * @return {EventRegisterCalendar}
    */
   on() {
-    return new EventRegister((a) => {
+    return new EventRegisterCalendar((a) => {
       return this._on(a)
     })
   }
 
-  /**
-   *
-   * @private
-   */
-  __handleEvents() {
-    this.on()
-      .nextMonth((payload) => {
-        this.__actions.actionNextMonth().dispatch(
-          new globalFlexioImport.io.flexio.astrolabe_calendar.actions.NextMonthBuilder().build()
-        )
-      })
-    this.on()
-      .previousMonth((payload) => {
-        this.__actions.actionPreviousMonth().dispatch(
-          new globalFlexioImport.io.flexio.astrolabe_calendar.actions.PreviousMonthBuilder().build()
-        )
-      })
-    this.on()
-      .updateDatePicked((payload) => {
-        this.__actions.actionUpdatePickedDate().dispatch(
-          new UpdatePickedDateBuilder().date(payload.date).build()
-        )
-      })
-  }
 
   template() {
     return this.html(
@@ -81,12 +62,9 @@ export class ViewCalendar extends View {
                     .text('<')
                     .reconciliationRules(RECONCILIATION_RULES.BYPASS_LISTENERS)
                     .listenEvent(
-                      ElementEventListenerBuilder
-                        .listen('click')
-                        .callback((e) => {
+                      UIEventBuilder.mouseEvent().click((e) => {
                           this.dispatch(PREVIOUS_MONTH, null)
                         })
-                        .build()
                     )
                 ),
                 this.html(
@@ -99,12 +77,9 @@ export class ViewCalendar extends View {
                     .text('>')
                     .reconciliationRules(RECONCILIATION_RULES.BYPASS_LISTENERS)
                     .listenEvent(
-                      ElementEventListenerBuilder
-                        .listen('click')
-                        .callback((e) => {
+                      UIEventBuilder.mouseEvent().click((e) => {
                           this.dispatch(NEXT_MONTH, null)
                         })
-                        .build()
                     )
                 )
               )
@@ -112,7 +87,6 @@ export class ViewCalendar extends View {
 
           this.html(
             e('div#calendar-calendar')
-              .className(style.calendarCalendar)
               .childNodes(
                 this.html(
                   e('div#DayHeaders')
@@ -122,7 +96,6 @@ export class ViewCalendar extends View {
                 ),
                 this.html(
                   e('div#weekList')
-                    .className(style.weekList)
                     .childNodes(...this.__weeks())
                     .reconciliationRules(RECONCILIATION_RULES.REPLACE)
                 )
@@ -133,9 +106,11 @@ export class ViewCalendar extends View {
   }
 
   __dayHeaders() {
-    let days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
+    let days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi']
     let res = []
-    days.forEach((day) => {
+    let daysWithFirstDay = days.splice(this.__firstDay)
+    daysWithFirstDay.push(...days)
+    daysWithFirstDay.forEach((day) => {
       res.push(
         this.html(
           e('label#' + day + '.labelDaysHeader')
@@ -198,23 +173,52 @@ export class ViewCalendar extends View {
         this.html(
           e('label#' + id + '-' + currentDay.getDate())
             .text(currentDay.getDate().toString())
-            .className(style.calendarDay)
             .reconciliationRules(RECONCILIATION_RULES.BYPASS_LISTENERS)
-            .bindClassName(style.calendarDayOutside, currentDay.getMonth() !== this.__selectedMonth.getMonth())
-            .bindClassName(style.calendarDaySelected, this.__flexDatePicked.toJSON() === day.toJSON())
-            .bindClassName(style.calendarDayNow, day.toJSON() === dayNow.toJSON())
-
+            .className(style.calendarDay)
+            .bindClassName(currentDay.getMonth() !== this.__selectedMonth.getMonth(), this.__styles.button().muted())
+            .bindClassName(this.__flexDatePicked.toJSON() === day.toJSON(), this.__styles.button().primary())
+            .bindClassName(day.toJSON() === dayNow.toJSON(), this.__styles.button().secondary())
             .listenEvent(
-              ElementEventListenerBuilder
-                .listen('click')
-                .callback((e) => {
+              UIEventBuilder.mouseEvent().click((e) => {
                   this.dispatch(UPDATE_DATE_PICKED, {date: day})
                 })
-                .build()
             )
         )
       )
     })
     return res
+  }
+}
+
+export const NEXT_MONTH = 'NEXT_MONTH'
+export const PREVIOUS_MONTH = 'PREVIOUS_MONTH'
+export const UPDATE_DATE_PICKED = 'UPDATE_DATE_PICKED'
+
+export class EventRegisterCalendar extends ViewPublicEventHandler {
+  /**
+   *
+   * @param {function} clb
+   * @return {String}
+   */
+  nextMonth(clb) {
+    return this._subscribeTo(NEXT_MONTH, clb)
+  }
+
+  /**
+   *
+   * @param {function} clb
+   * @return {String}
+   */
+  previousMonth(clb) {
+    return this._subscribeTo(PREVIOUS_MONTH, clb)
+  }
+
+  /**
+   *
+   * @param {function} clb
+   * @return {String}
+   */
+  updateDatePicked(clb) {
+    return this._subscribeTo(UPDATE_DATE_PICKED, clb)
   }
 }

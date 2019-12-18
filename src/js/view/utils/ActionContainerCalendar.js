@@ -2,33 +2,34 @@ import {TypeCheck} from '@flexio-oss/hotballoon'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {assertType} from '@flexio-oss/assert'
 
-export class CalendarActionManager {
+export class ActionContainerCalendar {
   /**
    *
-   * @param {ActionDispatcher<NextMonth>} actionNextMonth
-   * @param {ActionDispatcher<PreviousMonth>} actionPreviousMonth
-   * @param {ActionDispatcher<UpdatePickedDate>} actionUpdatePickedDate
+   * @param {ActionDispatcher<NextMonth, NextMonthBuilder>} actionNextMonth
+   * @param {ActionDispatcher<PreviousMonth, PreviousMonthBuilder>} actionPreviousMonth
+   * @param {ActionDispatcher<UpdatePickedDate, UpdatePickedDateBuilder>} actionUpdatePickedDate
    */
   constructor(actionNextMonth, actionPreviousMonth, actionUpdatePickedDate) {
     assertType(actionNextMonth.isTypeOf(globalFlexioImport.io.flexio.astrolabe_calendar.actions.NextMonth),
-      'CalendarActionManager:constructor: `actionNextMonth` should be an Action of NextMonth'
+      'ActionContainerCalendar:constructor: `actionNextMonth` should be an Action of NextMonth'
     )
     this.__actionNextMonth = TypeCheck.assertIsActionDispatcher(actionNextMonth)
 
     assertType(actionPreviousMonth.isTypeOf(globalFlexioImport.io.flexio.astrolabe_calendar.actions.PreviousMonth),
-      'CalendarActionManager:constructor: `actionPreviousMonth` should be an Action of PreviousMonth'
+      'ActionContainerCalendar:constructor: `actionPreviousMonth` should be an Action of PreviousMonth'
     )
     this.__actionPreviousMonth = TypeCheck.assertIsActionDispatcher(actionPreviousMonth)
 
+    console.log(actionUpdatePickedDate)
     assertType(actionUpdatePickedDate.isTypeOf(globalFlexioImport.io.flexio.astrolabe_calendar.actions.UpdatePickedDate),
-      'CalendarActionManager:constructor: `actionUpdatePickedDate` should be an Action of UpdatePickedDate'
+      'ActionContainerCalendar:constructor: `actionUpdatePickedDate` should be an Action of UpdatePickedDate'
     )
     this.__actionUpdatePickedDate = TypeCheck.assertIsActionDispatcher(actionUpdatePickedDate)
   }
 
   /**
    *
-   * @return {ActionDispatcher<NextMonth>}
+   * @return {ActionDispatcher<NextMonth, NextMonthBuilder>}
    */
   actionNextMonth() {
     return this.__actionNextMonth
@@ -36,7 +37,7 @@ export class CalendarActionManager {
 
   /**
    *
-   * @return {ActionDispatcher<PreviousMonth>}
+   * @return {ActionDispatcher<PreviousMonth, PreviousMonthBuilder>}
    */
   actionPreviousMonth() {
     return this.__actionPreviousMonth
@@ -44,7 +45,7 @@ export class CalendarActionManager {
 
   /**
    *
-   * @return {ActionDispatcher<UpdatePickedDate>}
+   * @return {ActionDispatcher<UpdatePickedDate, UpdatePickedDateBuilder>}
    */
   actionUpdatePickedDate() {
     return this.__actionUpdatePickedDate

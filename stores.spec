@@ -1,5 +1,5 @@
-StoreDatePicked:
+DatePicked:
   date: date
 
-StoreSelectedMonth:
+SelectedMonth:
   month: date
