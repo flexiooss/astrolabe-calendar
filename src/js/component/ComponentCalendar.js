@@ -1,4 +1,4 @@
-import '../../../import'
+import '../../import'
 import {TypeCheck} from '@flexio-oss/hotballoon'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {StoreDatePicked} from '../stores/StoreDatePicked'

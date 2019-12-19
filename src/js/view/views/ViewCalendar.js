@@ -175,9 +175,9 @@ export class ViewCalendar extends View {
             .text(currentDay.getDate().toString())
             .reconciliationRules(RECONCILIATION_RULES.BYPASS_LISTENERS)
             .className(style.calendarDay)
-            .bindClassName(currentDay.getMonth() !== this.__selectedMonth.getMonth(), this.__styles.button().muted())
-            .bindClassName(this.__flexDatePicked.toJSON() === day.toJSON(), this.__styles.button().primary())
-            .bindClassName(day.toJSON() === dayNow.toJSON(), this.__styles.button().secondary())
+            .bindClassName(currentDay.getMonth() !== this.__selectedMonth.getMonth(), style.calendarDayOutside)
+            .bindClassName(this.__flexDatePicked.toJSON() === day.toJSON(), style.calendarDaySelected)
+            .bindClassName(day.toJSON() === dayNow.toJSON(), style.calendarDayNow)
             .listenEvent(
               UIEventBuilder.mouseEvent().click((e) => {
                   this.dispatch(UPDATE_DATE_PICKED, {date: day})

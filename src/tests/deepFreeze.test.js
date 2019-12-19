@@ -1,5 +1,5 @@
 import {TestCase} from 'code-altimeter-js'
-import '../../import'
+import '../import'
 
 const assert = require('assert')
 

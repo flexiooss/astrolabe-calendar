@@ -1,4 +1,4 @@
-import './generated/io/package'
+import '../generated/io/package'
 import {deepKeyAssigner} from '@flexio-oss/js-generator-helpers'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {FlexDate} from '@flexio-oss/flex-types'
