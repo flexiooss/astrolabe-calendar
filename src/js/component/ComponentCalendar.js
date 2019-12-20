@@ -90,4 +90,8 @@ export class ComponentCalendar {
   getDate() {
     return this.__storeDatePiked.storePublic().data().date()
   }
+
+  listenDatePicked(callback) {
+    this.__storeDatePiked.storePublic().listenChanged(callback)
+  }
 }

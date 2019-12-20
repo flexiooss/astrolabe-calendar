@@ -34,4 +34,8 @@ export class ComponentCalendarPublic {
   getDate() {
     return this[__component].getDate()
   }
+
+  listenDatePicked(callback) {
+    this[__component].listenDatePicked(callback)
+  }
 }
