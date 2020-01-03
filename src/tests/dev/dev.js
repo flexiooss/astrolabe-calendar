@@ -7,3 +7,6 @@ const calendar = new CalendarBuilder(applicationDev.application(), applicationDe
   .withMondayFirstDayOfWeek()
   .withSelectionToggle().withLimit(2)
   .build()
+calendar.listenDateSelected(/**{StoreState<DateList>}*/(store) => {
+  console.log(store.data().dates())
+})

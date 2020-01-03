@@ -35,7 +35,11 @@ export class ComponentCalendarPublic {
     return this[__component].getDate()
   }
 
-  listenDatePicked(callback) {
-    this[__component].listenDatePicked(callback)
+  /**
+   * @callback callback
+   * @param {Function} callback
+   */
+  listenDateSelected(callback) {
+    this[__component].listenDateSelected(callback)
   }
 }

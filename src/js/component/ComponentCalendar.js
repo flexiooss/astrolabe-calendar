@@ -11,6 +11,7 @@ import {ActionPickedDate} from '../actions/ActionPickedDate'
 import {ActionContainerCalendar} from '../view/utils/ActionContainerCalendar'
 import {StoreContainerCalendar} from '../view/utils/StoreContainerCalendar'
 import {ViewMounterConfig} from './ViewMounter/ViewMounterConfig'
+import {StateType} from '../state/StateType'
 
 const InitCalendarBuilder = globalFlexioImport.io.flexio.astrolabe_calendar.actions.InitCalendarBuilder
 
@@ -87,14 +88,22 @@ export class ComponentCalendar {
   }
 
   /**
-   *
-   * @returns {FlexDate}
+   * @callback callback
+   * @param {function}callback
+   * @returns {boolean}
    */
-  getDate() {
-    return this.__storeDatePiked.storePublic().data().date()
-  }
-
-  listenDatePicked(callback) {
-    this.__storeDatePiked.storePublic().listenChanged(callback)
+  listenDateSelected(callback) {
+    let BreakException = {}
+    try {
+      this.__states.forEach((state) => {
+        if (state.name() === StateType.SELECTED) {
+          state.store().listenChanged(callback)
+          throw BreakException
+        }
+      })
+    } catch (e) {
+      return true
+    }
+    return false
   }
 }
