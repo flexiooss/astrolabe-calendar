@@ -2,10 +2,10 @@ import {InMemoryStoreBuilder, PublicStoreHandler, TypeCheck} from '@flexio-oss/h
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {assertType} from '@flexio-oss/assert'
 
-export class StoreDatePicked {
+export class StoreDateList {
   /**
    * @private
-   * @param {Store<DatePicked>} store
+   * @param {Store<DateList>} store
    */
   constructor(store) {
     this.__store = store
@@ -14,18 +14,18 @@ export class StoreDatePicked {
   /**
    *
    * @param {ComponentContext} componentContext
-   * @returns {StoreDatePicked}
+   * @returns {StoreDateList}
    */
   static create(componentContext) {
     assertType(TypeCheck.isComponentContext(componentContext),
-      'StoreDatePicked:build: `componentContext` should be a ComponentContext'
+      'StoreDateList:build: `componentContext` should be a ComponentContext'
     )
-    return new StoreDatePicked(
+    return new StoreDateList(
       componentContext.addStore(
         new InMemoryStoreBuilder()
-          .type(globalFlexioImport.io.flexio.astrolabe_calendar.stores.DatePicked)
+          .type(globalFlexioImport.io.flexio.astrolabe_calendar.stores.DateList)
           .initialData(
-            new globalFlexioImport.io.flexio.astrolabe_calendar.stores.DatePickedBuilder().build()
+            new globalFlexioImport.io.flexio.astrolabe_calendar.stores.DateListBuilder().build()
           )
           .build()
       )
@@ -34,7 +34,7 @@ export class StoreDatePicked {
 
   /**
    *
-   * @returns {Store<DatePicked>}
+   * @returns {Store<DateList>}
    */
   store() {
     return this.__store
@@ -42,7 +42,7 @@ export class StoreDatePicked {
 
   /**
    *
-   * @returns {PublicStoreHandler<DatePicked>}
+   * @returns {PublicStoreHandler<DateList>}
    */
   storePublic() {
     return new PublicStoreHandler(this.__store)

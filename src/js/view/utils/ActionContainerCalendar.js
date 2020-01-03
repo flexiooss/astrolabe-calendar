@@ -7,7 +7,7 @@ export class ActionContainerCalendar {
    *
    * @param {ActionDispatcher<NextMonth, NextMonthBuilder>} actionNextMonth
    * @param {ActionDispatcher<PreviousMonth, PreviousMonthBuilder>} actionPreviousMonth
-   * @param {ActionDispatcher<UpdatePickedDate, UpdatePickedDateBuilder>} actionUpdatePickedDate
+   * @param {ActionDispatcher<PickedDate, PickedDateBuilder>} actionUpdatePickedDate
    */
   constructor(actionNextMonth, actionPreviousMonth, actionUpdatePickedDate) {
     assertType(actionNextMonth.isTypeOf(globalFlexioImport.io.flexio.astrolabe_calendar.actions.NextMonth),
@@ -21,7 +21,7 @@ export class ActionContainerCalendar {
     this.__actionPreviousMonth = TypeCheck.assertIsActionDispatcher(actionPreviousMonth)
 
     console.log(actionUpdatePickedDate)
-    assertType(actionUpdatePickedDate.isTypeOf(globalFlexioImport.io.flexio.astrolabe_calendar.actions.UpdatePickedDate),
+    assertType(actionUpdatePickedDate.isTypeOf(globalFlexioImport.io.flexio.astrolabe_calendar.actions.PickedDate),
       'ActionContainerCalendar:constructor: `actionUpdatePickedDate` should be an Action of UpdatePickedDate'
     )
     this.__actionUpdatePickedDate = TypeCheck.assertIsActionDispatcher(actionUpdatePickedDate)

@@ -10,13 +10,14 @@ export class ViewContainerCalendar extends ViewContainer {
    * @param {ComponentAstrolabePublic} dateGenerator
    * @param {DaysEnum} firstDay
    * @param {ThemeStyle} styles
+   * @param {StateList} states
    */
-  constructor(viewContainerParameters, calendarStoreManager, calendarActionManager, dateGenerator, firstDay, styles) {
+  constructor(viewContainerParameters, calendarStoreManager, calendarActionManager, dateGenerator, firstDay, styles, states) {
     super(viewContainerParameters)
     this.__stores = calendarStoreManager
     this.__actions = calendarActionManager
     this.__dateGenerator = dateGenerator
-    this.__calendar = this.addView(new ViewCalendar(this, this.__stores, this.__dateGenerator, firstDay, styles))
+    this.__calendar = this.addView(new ViewCalendar(this, this.__stores, this.__dateGenerator, firstDay, styles, states))
     
     this.__handleEvents()
   }

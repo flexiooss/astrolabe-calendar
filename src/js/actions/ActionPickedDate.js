@@ -3,10 +3,10 @@ import {assertType, isNull} from '@flexio-oss/assert'
 import { ActionDispatcherBuilder, TypeCheck } from '@flexio-oss/hotballoon'
 import {DateExtended} from '@flexio-oss/extended-flex-types'
 
-export class ActionUpdatePickedDate {
+export class ActionPickedDate {
   /**
    * @private
-   * @param {ActionDispatcher<UpdatePickedDate, UpdatePickedDateBuilder>} action
+   * @param {ActionDispatcher<PickedDate, PickedDateBuilder>} action
    */
   constructor(action) {
     this.__action = action
@@ -15,15 +15,15 @@ export class ActionUpdatePickedDate {
   /**
    *
    * @param {Dispatcher} dispatcher
-   * @returns {ActionUpdatePickedDate}
+   * @returns {ActionPickedDate}
    */
   static create(dispatcher) {
     assertType(TypeCheck.isDispatcher(dispatcher),
-      'ActionUpdatePickedDate:create: `dispatcher` should be a Dispatcher'
+      'ActionDateChangedPublic:create: `dispatcher` should be a Dispatcher'
     )
-    return new ActionUpdatePickedDate(
+    return new ActionPickedDate(
       new ActionDispatcherBuilder()
-        .type(globalFlexioImport.io.flexio.astrolabe_calendar.actions.UpdatePickedDate)
+        .type(globalFlexioImport.io.flexio.astrolabe_calendar.actions.PickedDate)
         .dispatcher(dispatcher)
         .build()
     )
@@ -32,17 +32,13 @@ export class ActionUpdatePickedDate {
   /**
    *
    * @param {ComponentContext} componentContext
-   * @param {Store<DatePicked>} storeDatePicked
+   * @param {ActionDispatcher<PickedDate, PickedDateBuilder>} actionDateChangedPublic
    * @param {Store<SelectedMonth>} storeSelectedMonth
-   * @param dateGenerator
-   * @returns {ActionUpdatePickedDate}
+   * @returns {ActionPickedDate}
    */
-  listen(componentContext, storeDatePicked, storeSelectedMonth, dateGenerator) {
-    assertType(TypeCheck.isStore(storeDatePicked),
-      'ActionUpdatePickedDate:constructor: `storeDatePicked` should be a Store'
-    )
+  listen(componentContext, actionDateChangedPublic, storeSelectedMonth) {
     assertType(!isNull(this.__action),
-      'ActionUpdatePickedDate:listen: action should be initialize before using it'
+      'ActionDateChangedPublic:listen: action should be initialize before using it'
     )
     this.__action.listenWithCallback(
       /**
@@ -50,22 +46,21 @@ export class ActionUpdatePickedDate {
        * @param {UpdatePickedDate} payload
        */
       (payload) => {
-        storeDatePicked.set(
-          storeDatePicked.state().data()
-            .withDate(payload.date())
-        )
         let pickedDate = DateExtended.fromFlexDate(payload.date())
         pickedDate.setDate(1)
         pickedDate.setHours(0, 0, 0, 0)
         if (DateExtended.fromFlexDate(storeSelectedMonth.state().data().month()).getMonth() !== pickedDate.getMonth()) {
-          dateGenerator.addMonth(pickedDate.getFullYear(), pickedDate.getMonth() + 1)
-          dateGenerator.addMonth(pickedDate.getFullYear(), pickedDate.getMonth() - 1)
-
           storeSelectedMonth.set(
             storeSelectedMonth.state().data()
               .withMonth(pickedDate.toLocaleFlexDate())
           )
         }
+
+        actionDateChangedPublic.dispatch(
+          actionDateChangedPublic.payloadBuilder()
+            .date(payload.date())
+            .build()
+        )
       },
       componentContext
     )
@@ -74,7 +69,7 @@ export class ActionUpdatePickedDate {
 
   /**
    *
-   * @returns {ActionDispatcher<UpdatePickedDate, UpdatePickedDateBuilder>}
+   * @returns {ActionDispatcher<PickedDate, PickedDateBuilder>}
    */
   action() {
     return this.__action

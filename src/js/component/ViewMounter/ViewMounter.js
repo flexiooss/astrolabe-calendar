@@ -34,7 +34,8 @@ export class ViewMounter {
       viewMounterConfig.getActionsContainer(),
       viewMounterConfig.getDateGenerator(),
       viewMounterConfig.getFirstDay(),
-      viewMounterConfig.getStyles()
+      viewMounterConfig.getStyles(),
+      viewMounterConfig.getStates()
     )
 
     assertType(

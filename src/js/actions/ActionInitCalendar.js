@@ -36,19 +36,15 @@ export class ActionInitCalendar {
    *
    * @returns {ActionInitCalendar}
    * @param {ComponentContext} componentContext
-   * @param {Store<DatePicked>} storeDatePicked
    * @param {Store<SelectedMonth>}storeSelectedMonth
    * @param {ComponentAstrolabePublic} dateGenerator
    */
-  listen(componentContext, storeDatePicked, storeSelectedMonth, dateGenerator) {
-    assertType(TypeCheck.isStore(storeDatePicked),
-      'ActionUpdatePickedDate:constructor: `storeDatePicked` should be a Store'
-    )
+  listen(componentContext, storeSelectedMonth, dateGenerator) {
     assertType(TypeCheck.isStore(storeSelectedMonth),
       'ActionNextMonth:constructor: `storeSelectedMonth` should be a Store'
     )
     assertType(!isNull(this.__action),
-      'ActionUpdatePickedDate:listen: action should be initialize before using it'
+      'ActionDateChangedPublic:listen: action should be initialize before using it'
     )
     this.__action.listenWithCallback(
       /**
@@ -60,10 +56,6 @@ export class ActionInitCalendar {
         dateGenerator.addMonth(now.getFullYear(), now.getMonth())
         dateGenerator.addMonth(now.getFullYear(), now.getMonth() + 1)
         dateGenerator.addMonth(now.getFullYear(), now.getMonth() - 1)
-        storeDatePicked.set(
-          storeDatePicked.state().data()
-            .withDate(now.toLocaleFlexDate())
-        )
         now.setDate(1)
         now.setHours(0, 0, 0, 0)
         storeSelectedMonth.set(

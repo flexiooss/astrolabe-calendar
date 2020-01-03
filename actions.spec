@@ -4,5 +4,5 @@ NextMonth:
 
 InitCalendar:
 
-UpdatePickedDate:
+PickedDate:
   date: date

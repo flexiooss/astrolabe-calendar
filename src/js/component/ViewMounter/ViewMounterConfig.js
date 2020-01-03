@@ -11,6 +11,8 @@ export class ViewMounterConfig {
     this.__parentNode = null
     this.__dateGenerator = null
     this.__firstDay = null
+    this.__styles = null
+    this.__states = null
   }
 
   /**
@@ -80,11 +82,6 @@ export class ViewMounterConfig {
     return this
   }
 
-  styles(styles) {
-    this.__styles = styles
-    return this
-  }
-
   /**
    *
    * @param {DaysEnum} firstDay
@@ -95,7 +92,26 @@ export class ViewMounterConfig {
     return this
   }
 
+  /**
+   *
+   * @param {ThemeStyle} styles
+   * @returns {ViewMounterConfig}
+   */
+  styles(styles) {
+    this.__styles = styles
+    return this
+  }
 
+  /**
+   *
+   * @param states
+   * @returns {ViewMounterConfig}
+   */
+  states(states) {
+    this.__states = states
+    return this
+  }
+  
   getComponentContext() {
     return this.__componentContext
   }
@@ -122,5 +138,9 @@ export class ViewMounterConfig {
 
   getStyles() {
     return this.__styles
+  }
+
+  getStates() {
+    return this.__states
   }
 }
