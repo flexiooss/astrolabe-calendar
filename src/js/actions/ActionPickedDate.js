@@ -49,7 +49,8 @@ export class ActionPickedDate {
         let pickedDate = DateExtended.fromFlexDate(payload.date())
         pickedDate.setDate(1)
         pickedDate.setHours(0, 0, 0, 0)
-        if (DateExtended.fromFlexDate(storeSelectedMonth.state().data().month()).getMonth() !== pickedDate.getMonth()) {
+        if ((DateExtended.fromFlexDate(storeSelectedMonth.state().data().month()).getMonth() !== pickedDate.getMonth()) ||
+          (DateExtended.fromFlexDate(storeSelectedMonth.state().data().month()).getFullYear() !== pickedDate.getFullYear())) {
           storeSelectedMonth.set(
             storeSelectedMonth.state().data()
               .withMonth(pickedDate.toLocaleFlexDate())

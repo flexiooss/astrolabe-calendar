@@ -157,7 +157,7 @@ export class ViewCalendar extends View {
       }
       res.push(
         this.html(
-          e('div#' + id)
+          e(`div#${id}`)
             .className(style.calendarWeek)
             .childNodes(...this.__days(currentWeek, id))
         )
@@ -195,18 +195,16 @@ export class ViewCalendar extends View {
       )
       res.push(
         this.html(
-          e('label#' + id + '-' + currentDay.getDate())
+          e(`label#${id}-${currentDay.getDate()}`)
             .text(currentDay.getDate().toString())
             .reconciliationRules(RECONCILIATION_RULES.BYPASS_LISTENERS)
             .className(style.calendarDay)
             .bindClassName(currentDay.getMonth() !== this.__selectedMonth.getMonth(), style.calendarDayOutside)
             .bindClassName(dayState.length !== 0, style.calendarDaySelected)
             .bindClassName(day.toJSON() === dayNow.toJSON(), style.calendarDayNow)
-            .listenEvent(
-              UIEventBuilder.mouseEvent().click((e) => {
-                this.dispatch(UPDATE_DATE_PICKED, {date: day})
-              })
-            )
+            .listenEvent(UIEventBuilder.mouseEvent().click((e) => {
+              this.dispatch(UPDATE_DATE_PICKED, {date: day})
+            }))
         )
       )
     })
