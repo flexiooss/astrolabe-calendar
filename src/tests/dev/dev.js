@@ -6,7 +6,7 @@ const applicationDev = ApplicationWithStyle.withConsoleLogger()
 console.log(new FlexDate('2021-02-02'))
 const calendar = new CalendarBuilder(applicationDev.application(), applicationDev.application().document().body, applicationDev.styles())
   .withMondayFirstDayOfWeek()
-  .withSelectionRadio()
+  .withSelectionToggle().withPeriod()
   .build()
 calendar.listenDateSelected(/**{StoreState<DateList>}*/(store) => {
   console.log(store.data().dates())

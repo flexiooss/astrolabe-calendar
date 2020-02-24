@@ -237,7 +237,6 @@ export class ViewCalendar extends View {
             .bindClassName(day.toJSON() === dayNow.toJSON(), this.__styles.color().white())
             .bindClassName(currentDay.getMonth() !== this.__selectedMonth.getMonth(), this.__styles.color().muted())
             .bindClassName(dayState.length !== 0, this.__styles.color().focusBg())
-            .bindClassName(dayState.length !== 0, this.__styles.color().primary())
             .listenEvent(UIEventBuilder.pointerEvent().up((e) => {
               this.dispatch(UPDATE_DATE_PICKED, {date: day})
             }))
