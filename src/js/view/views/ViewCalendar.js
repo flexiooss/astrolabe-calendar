@@ -6,7 +6,6 @@ import {
   UIEventBuilder
 } from '@flexio-oss/hotballoon'
 import {DayList} from '@flexio-oss/astrolabe/src/js/types/week/DayList'
-import style from '../../../assets/style.css'
 import {DateExtended} from '@flexio-oss/extended-flex-types'
 import {isNull} from '@flexio-oss/assert'
 
@@ -54,55 +53,82 @@ export class ViewCalendar extends View {
   template() {
     return this.html(
       e('div#calendar-main')
-        .className(style.calendar)
+        .childNodes(
+          this.__navigation(),
+          this.__calendar()
+        )
+    )
+  }
+
+  __navigation() {
+    return this.html(
+      e('div#navigator')
+        .className(
+          this.__styles.layout().row(),
+          this.__styles.layout().rowAlignCenter()
+        )
+        .childNodes(
+          this.__styles.icons().applyTo(this.html(
+            e('span#previousMonth')
+              .className(
+                this.__styles.layout().columnJustifyLeft(),
+                this.__styles.layout().mobileWidth().w1(),
+                this.__styles.elements().clickable()
+              )
+              .reconciliationRules(RECONCILIATION_RULES.BYPASS_LISTENERS)
+              .listenEvent(
+                UIEventBuilder.pointerEvent().up((e) => {
+                  this.dispatch(PREVIOUS_MONTH, null)
+                })
+              )
+            )
+          ).chevronLeft().medium().primary(),
+          this.html(
+            e('label#actualMonth.calendarTitle')
+              .className(
+                this.__styles.layout().columnJustifyCenter(),
+                this.__styles.layout().mobileWidth().w22()
+              )
+              .text(
+                this.__selectedMonth.toLocaleDateString(window.navigator.language, {month: 'long'}) + ' ' + this.__selectedMonth.getFullYear())
+          ),
+          this.__styles.icons().applyTo(this.html(
+            e('span#nextMonth')
+              .className(
+                this.__styles.layout().columnJustifyRight(),
+                this.__styles.layout().mobileWidth().w1(),
+                this.__styles.elements().clickable()
+              )
+              .reconciliationRules(RECONCILIATION_RULES.BYPASS_LISTENERS)
+              .listenEvent(
+                UIEventBuilder.pointerEvent().up((e) => {
+                  this.dispatch(NEXT_MONTH, null)
+                })
+              )
+            )
+          ).chevronRight().medium().primary()
+        )
+    )
+  }
+
+  __calendar() {
+    return this.html(
+      e('div#calendar-calendar')
+        .className(
+          this.__styles.layout().column(),
+          this.__styles.layout().columnJustifyCenter()
+        )
         .childNodes(
           this.html(
-            e('div#navigator')
-              .className(style.calendarHeader)
-              .childNodes(
-                this.html(
-                  e('button#previousMonth')
-                    .text('<')
-                    .reconciliationRules(RECONCILIATION_RULES.BYPASS_LISTENERS)
-                    .listenEvent(
-                      UIEventBuilder.mouseEvent().click((e) => {
-                        this.dispatch(PREVIOUS_MONTH, null)
-                      })
-                    )
-                ),
-                this.html(
-                  e('label#actualMonth.calendarTitle')
-                    .text(
-                      this.__selectedMonth.toLocaleDateString(window.navigator.language, {month: 'long'}) + ' ' + this.__selectedMonth.getFullYear())
-                ),
-                this.html(
-                  e('button#nextMonth')
-                    .text('>')
-                    .reconciliationRules(RECONCILIATION_RULES.BYPASS_LISTENERS)
-                    .listenEvent(
-                      UIEventBuilder.mouseEvent().click((e) => {
-                        this.dispatch(NEXT_MONTH, null)
-                      })
-                    )
-                )
-              )
+            e('div#DayHeaders')
+              .className(this.__styles.layout().row())
+              .childNodes(...this.__dayHeaders())
+              .reconciliationRules(RECONCILIATION_RULES.BYPASS)
           ),
-
           this.html(
-            e('div#calendar-calendar')
-              .childNodes(
-                this.html(
-                  e('div#DayHeaders')
-                    .className(style.DayHeaders)
-                    .childNodes(...this.__dayHeaders())
-                    .reconciliationRules(RECONCILIATION_RULES.BYPASS)
-                ),
-                this.html(
-                  e('div#weekList')
-                    .childNodes(...this.__weeks())
-                    .reconciliationRules(RECONCILIATION_RULES.REPLACE)
-                )
-              )
+            e('div#weekList')
+              .childNodes(...this.__weeks())
+              .reconciliationRules(RECONCILIATION_RULES.REPLACE)
           )
         )
     )
@@ -117,6 +143,11 @@ export class ViewCalendar extends View {
       res.push(
         this.html(
           e('label#' + day + '.labelDaysHeader')
+            .className(
+              this.__styles.layout().mobileWidth().w3(),
+              this.__styles.layout().columnJustifyCenter()
+            )
+            .styles({lineHeight: '12vw'})
             .text(day.substr(0, 1))
         )
       )
@@ -158,7 +189,7 @@ export class ViewCalendar extends View {
       res.push(
         this.html(
           e(`div#${id}`)
-            .className(style.calendarWeek)
+            .className(this.__styles.layout().row())
             .childNodes(...this.__days(currentWeek, id))
         )
       )
@@ -174,7 +205,7 @@ export class ViewCalendar extends View {
       let currentDay = DateExtended.fromFlexDate(day)
 
       /**
-       * 
+       *
        * @type {FlexArray<?State>}
        */
       let dayState = this.__states.filter(
@@ -195,16 +226,32 @@ export class ViewCalendar extends View {
       )
       res.push(
         this.html(
-          e(`label#${id}-${currentDay.getDate()}`)
-            .text(currentDay.getDate().toString())
-            .reconciliationRules(RECONCILIATION_RULES.BYPASS_LISTENERS)
-            .className(style.calendarDay)
-            .bindClassName(currentDay.getMonth() !== this.__selectedMonth.getMonth(), style.calendarDayOutside)
-            .bindClassName(dayState.length !== 0, style.calendarDaySelected)
-            .bindClassName(day.toJSON() === dayNow.toJSON(), style.calendarDayNow)
-            .listenEvent(UIEventBuilder.mouseEvent().click((e) => {
+          e(`div#container-${id}-${currentDay.getDate()}`)
+            .className(
+              this.__styles.layout().columnJustifyCenter(),
+              this.__styles.layout().mobileWidth().w3(),
+              this.__styles.elements().clickable()
+            )
+            .styles({lineHeight: '12vw'})
+            .bindClassName(day.toJSON() === dayNow.toJSON(), this.__styles.color().primaryBg())
+            .bindClassName(day.toJSON() === dayNow.toJSON(), this.__styles.color().white())
+            .bindClassName(currentDay.getMonth() !== this.__selectedMonth.getMonth(), this.__styles.color().muted())
+            .bindClassName(dayState.length !== 0, this.__styles.color().focusBg())
+            .bindClassName(dayState.length !== 0, this.__styles.color().primary())
+            .listenEvent(UIEventBuilder.pointerEvent().up((e) => {
               this.dispatch(UPDATE_DATE_PICKED, {date: day})
             }))
+            .childNodes(
+              this.html(
+                e(`label#${id}-${currentDay.getDate()}`)
+                  .text(currentDay.getDate().toString())
+                  .reconciliationRules(RECONCILIATION_RULES.BYPASS_LISTENERS)
+                  .className(
+                    this.__styles.fontSize().h5(),
+                    this.__styles.fontStyle().bold()
+                  )
+              )
+            )
         )
       )
     })
