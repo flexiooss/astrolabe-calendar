@@ -35,6 +35,7 @@ export class ViewMounter {
       viewMounterConfig.getDateGenerator(),
       viewMounterConfig.getFirstDay(),
       viewMounterConfig.getStyles(),
+      viewMounterConfig.getStyleCustom(),
       viewMounterConfig.getStates()
     )
 

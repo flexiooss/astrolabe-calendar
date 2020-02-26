@@ -12,6 +12,7 @@ export class ViewMounterConfig {
     this.__dateGenerator = null
     this.__firstDay = null
     this.__styles = null
+    this.__styleCustom = null
     this.__states = null
   }
 
@@ -104,6 +105,18 @@ export class ViewMounterConfig {
 
   /**
    *
+   * @param {CalendarCustomStyle} styleCustom
+   * @returns {ViewMounterConfig}
+   */
+  styleCustom(styleCustom) {
+    this.__styleCustom = styleCustom
+    return this
+  }
+
+
+
+  /**
+   *
    * @param states
    * @returns {ViewMounterConfig}
    */
@@ -138,6 +151,10 @@ export class ViewMounterConfig {
 
   getStyles() {
     return this.__styles
+  }
+
+  getStyleCustom() {
+    return this.__styleCustom
   }
 
   getStates() {

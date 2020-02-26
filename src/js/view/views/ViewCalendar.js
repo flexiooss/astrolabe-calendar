@@ -17,14 +17,16 @@ export class ViewCalendar extends View {
    * @param {ComponentAstrolabePublic} dateGenerator
    * @param {DaysEnum} firstDay
    * @param {ThemeStyle} styles
+   * @param {CalendarCustomStyle} styleCustom
    * @param {StateList} states
    */
-  constructor(container, calendarStoreManager, dateGenerator, firstDay, styles, states) {
+  constructor(container, calendarStoreManager, dateGenerator, firstDay, styles, styleCustom, states) {
     super(container)
     this.__stores = calendarStoreManager
     this.__dateGenerator = dateGenerator
     this.__firstDay = firstDay
     this.__styles = styles
+    this.__styleCustom = styleCustom
     this.__states = states
 
     this.__selectedMonth = DateExtended.fromFlexDate(this.__stores.publicStoreSelectedMonth().data().month())
@@ -145,9 +147,9 @@ export class ViewCalendar extends View {
           e('label#' + day + '.labelDaysHeader')
             .className(
               this.__styles.layout().mobileWidth().w3(),
-              this.__styles.layout().columnJustifyCenter()
+              this.__styles.layout().columnJustifyCenter(),
+              this.__styleCustom.square()
             )
-            .styles({lineHeight: '12vw'})
             .text(day.substr(0, 1))
         )
       )
@@ -230,9 +232,9 @@ export class ViewCalendar extends View {
             .className(
               this.__styles.layout().columnJustifyCenter(),
               this.__styles.layout().mobileWidth().w3(),
-              this.__styles.elements().clickable()
+              this.__styles.elements().clickable(),
+              this.__styleCustom.square()
             )
-            .styles({lineHeight: '12vw'})
             .bindClassName(day.toJSON() === dayNow.toJSON(), this.__styles.color().primaryBg())
             .bindClassName(day.toJSON() === dayNow.toJSON(), this.__styles.color().white())
             .bindClassName(currentDay.getMonth() !== this.__selectedMonth.getMonth(), this.__styles.color().muted())

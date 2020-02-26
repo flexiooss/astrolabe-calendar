@@ -21,18 +21,20 @@ export class ComponentCalendar {
    * @param {ComponentContext} componentContext
    * @param {ViewMounter} viewMounter
    * @param {ThemeStyle} styles
+   * @param {CalendarCustomStyle} styleCustom
    * @param {Element} parentNode
    * @param {DaysEnum} firstDay
    * @param {StateList} states
    * @param {ActionDispatcher<PickedDate, PickedDateBuilder>} actionDateChangedPublic
    */
-  constructor(componentContext, viewMounter, styles, parentNode, firstDay, states, actionDateChangedPublic) {
+  constructor(componentContext, viewMounter, styles, styleCustom, parentNode, firstDay, states, actionDateChangedPublic) {
     assert(TypeCheck.isComponentContext(componentContext),
       'ComponentAstrolabe:constructor: `componentContext` argument should be ComponentContext'
     )
     this.__componentContext = componentContext
     this.__viewMounter = viewMounter
     this.__styles = styles
+    this.__styleCustom = styleCustom
     this.__parentNode = parentNode
     this.__firstDay = firstDay
     this.__states = states
@@ -73,6 +75,7 @@ export class ComponentCalendar {
         .firstDay(this.__firstDay)
         .parentNode(this.__parentNode)
         .styles(this.__styles)
+        .styleCustom(this.__styleCustom)
         .states(this.__states)
     ).viewContainer()
   }

@@ -1,0 +1,13 @@
+.box{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 0 calc(12%);
+  line-height: 0px;
+}
+
+.box:after{
+  content: '';
+  display: block;
+  padding-bottom: 100%;
+}

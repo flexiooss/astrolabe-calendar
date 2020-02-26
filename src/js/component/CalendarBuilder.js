@@ -8,12 +8,16 @@ import {StateList} from '../state/StateList'
 import {StateSelected} from '../state/StateSelected/StateSelected'
 import {DaysEnum} from '@flexio-oss/astrolabe/src/js/types/DaysEnum'
 import {StateFiller} from '../state/StateFiller/StateFiller'
+import {CalendarCustomStyleImpl} from '../view/customTheme/CalendarCustomStyleImpl'
 
 export class ComponentCalendarBuilder {
   constructor() {
     this.__componentContext = null
     this.__parentNode = null
     this.__firstDay = null
+    this.__styles = null
+    this.__states = null
+    this.__styleCustom = null
   }
 
   /**
@@ -85,11 +89,15 @@ export class ComponentCalendarBuilder {
    * @return {ComponentCalendarPublic}
    */
   build() {
+    this.__styleCustom = new CalendarCustomStyleImpl()
+    this.__styles.stylist().register(this.__styleCustom)
+
     return new ComponentCalendarPublic(
       new ComponentCalendar(
         this.__componentContext,
         new ViewMounter(),
         this.__styles,
+        this.__styleCustom,
         this.__parentNode,
         this.__firstDay,
         this.__states,
