@@ -4,14 +4,13 @@
   "main": "index.js",
   "repository": "git@github.com:flexiooss/astrolabe-calendar.git",
   "author": "Antoine Bachetti (https://github.com/AntoineBcht)",
-  "dependencies": {
-    "@flexio-corp/hotballoon-common-parent": "0.2.0-dev",
-    "@flexio-oss/astrolabe": "0.0.0-dev"
-  },
   "devDependencies": {
     "code-altimeter-js": "https://github.com/flexiooss/code-altimeter-js.git",
-    "@flexio-oss/hotballoon-test-dummies": "1.0.0-dev",
-    "@flexio-corp/js-flexio-resources-common": "1.0.0-dev"
+    "@flexio-oss/hotballoon-test-dummies": "1.0.0-dev"
+  },
+  "dependencies": {
+    "@flexio-corp/component-styled-parent": "1.1.0",
+    "@flexio-oss/astrolabe": "0.0.0-dev"
   },
   "peerDependencies": {
     "@flexio-oss/js-style-theme-interface": ">0.0.0",

@@ -67,14 +67,13 @@ export class ViewCalendar extends View {
       e('div#navigator')
         .className(
           this.__styles.layout().row(),
-          this.__styles.layout().rowAlignCenter()
+          this.__styles.layout().rowAlignCenter(),
+          this.__styleCustom.headerSpaceBetween()
         )
         .childNodes(
           this.__styles.icons().applyTo(this.html(
             e('span#previousMonth')
               .className(
-                this.__styles.layout().columnJustifyLeft(),
-                this.__styles.layout().mobileWidth().w1(),
                 this.__styles.elements().clickable()
               )
               .reconciliationRules(RECONCILIATION_RULES.BYPASS_LISTENERS)
@@ -87,20 +86,12 @@ export class ViewCalendar extends View {
           ).chevronLeft().medium().primary(),
           this.html(
             e('label#actualMonth.calendarTitle')
-              .className(
-                this.__styles.layout().columnJustifyCenter(),
-                this.__styles.layout().mobileWidth().w22()
-              )
               .text(
                 this.__selectedMonth.toLocaleDateString(window.navigator.language, {month: 'long'}) + ' ' + this.__selectedMonth.getFullYear())
           ),
           this.__styles.icons().applyTo(this.html(
             e('span#nextMonth')
-              .className(
-                this.__styles.layout().columnJustifyRight(),
-                this.__styles.layout().mobileWidth().w1(),
-                this.__styles.elements().clickable()
-              )
+              .className(this.__styles.elements().clickable())
               .reconciliationRules(RECONCILIATION_RULES.BYPASS_LISTENERS)
               .listenEvent(
                 UIEventBuilder.pointerEvent().up((e) => {

@@ -32,8 +32,16 @@ export class CalendarCustomStyleImpl extends CalendarCustomStyle {
           }
         )
         .build()
+      ,
+      this._cssBuilder([this.headerSpaceBetween()])
+        .styleSheetMediaRules(
+          styleSheetMediaAll,
+          {
+            'justify-content': 'space-between'
+          }
+        )
+        .build()
     )
-
   }
 
   /**
@@ -41,5 +49,13 @@ export class CalendarCustomStyleImpl extends CalendarCustomStyle {
    */
   square() {
     return this._selector('.calendar-square')
+  }
+
+  /**
+   *
+   * @return {string}
+   */
+  headerSpaceBetween() {
+    return this._selector('.calendar-header-space-between')
   }
 }

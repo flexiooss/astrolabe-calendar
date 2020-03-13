@@ -12,6 +12,13 @@ export class CalendarCustomStyle extends Style {
     throw new Error('should be override')
   }
 
+  /**
+   * @return {string}
+   */
+  headerSpaceBetween() {
+    throw new Error('should be override')
+  }
+
 }
 
 /**
