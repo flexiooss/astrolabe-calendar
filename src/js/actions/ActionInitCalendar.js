@@ -1,9 +1,6 @@
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {assertType, isNull} from '@flexio-oss/assert'
-import {
-  ActionDispatcherBuilder,
-  TypeCheck
-} from '@flexio-oss/hotballoon'
+import {ActionDispatcherBuilder, TypeCheck} from '@flexio-oss/hotballoon'
 import {DateExtended} from '@flexio-oss/extended-flex-types'
 
 export class ActionInitCalendar {

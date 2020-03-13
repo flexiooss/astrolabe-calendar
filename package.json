@@ -11,16 +11,7 @@
     "@flexio-oss/astrolabe": "0.2.0"
   },
   "dependencies": {},
-  "peerDependencies": {
-    "@flexio-oss/js-style-theme-interface": ">0.0.0",
-    "@flexio-oss/assert": ">0.0.0",
-    "@flexio-oss/hotballoon": ">0.0.0",
-    "@flexio-oss/extended-flex-types": ">0.0.0",
-    "@flexio-oss/js-generator-helpers": ">0.0.0",
-    "@flexio-oss/global-import-registry": ">0.0.0",
-    "@flexio-oss/js-logger": ">0.0.0",
-    "@flexio-oss/flex-types": ">0.0.0"
-  },
+  "peerDependencies": {},
   "hotballoon-shed": {
     "build": {
       "builder": "webpack4"
